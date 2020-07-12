@@ -5,17 +5,17 @@ import { createAppContainer } from 'react-navigation';
 import LoggedOut from './src/screens/LoggedOut';
 import Login from './src/screens/Login';
 import ForgotPassword from './src/screens/ForgotPassword';
-// import Home from './src/containers/Home';
 import LoggedInTabNavigator from './src/navigators/LoggedInTabNavigator';
-import Home from './src/containers/Home';
-import Fog from './src/containers/Fog';
-import Help from './src/containers/Help';
-import Emergency from './src/containers/Emergency';
-import Metrics from './src/containers/Metrics';
+import Home from './src/screens/Home';
+import Fog from './src/screens/Fog';
+import Help from './src/screens/Help';
+import Emergency from './src/screens/Emergency';
+import Metrics from './src/screens/Metrics';
+import PhoneCall from './src/screens/PhoneCall';
 
 // export default class App extends Component{
 //   render() {
-//     return <Metrics/>
+//     return <LoggedInTabNavigator/>
 //   }
 // }
 

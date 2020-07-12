@@ -1,8 +1,8 @@
-import React from 'react';
+import React, {Component} from 'react';
 import MapView, { Marker, Polygon } from 'react-native-maps';
 import { StyleSheet, Text, View } from 'react-native';
 
-export default class Emergency extends React.Component {
+export default class Emergency extends Component {
  
         state = {
           coordinates1: [

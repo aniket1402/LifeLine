@@ -3,12 +3,13 @@ import { StyleSheet, Text, View, ScrollView, KeyboardAvoidingView } from 'react-
 import { NavigationContainer } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import Home from '../containers/Home';
-import Fog from '../containers/Fog';
-import Help from '../containers/Help';
-import Metrics from '../containers/Metrics';
-import Emergency from '../containers/Emergency';
+// import Home from '../containers/Home';
+import Fog from '../screens/Fog';
+import Help from '../screens/Help';
+import Metrics from '../screens/Metrics';
+import Emergency from '../screens/Emergency';
 import colors from '../styles/colors';
+import Home from '../screens/Home';
 
 const Tab = createBottomTabNavigator();
 const tintColor = colors.green01;
