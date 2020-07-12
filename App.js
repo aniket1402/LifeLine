@@ -1,21 +1,80 @@
-import { StatusBar } from 'expo-status-bar';
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import React, {Component} from 'react';
+import { createStackNavigator } from 'react-navigation-stack';
+import { createAppContainer } from 'react-navigation';
+// import { StyleSheet, Text, View } from 'react-native';
+import LoggedOut from './src/screens/LoggedOut';
+import Login from './src/screens/Login';
+import ForgotPassword from './src/screens/ForgotPassword';
+// import Home from './src/containers/Home';
+import LoggedInTabNavigator from './src/navigators/LoggedInTabNavigator';
+import Home from './src/containers/Home';
 
-export default function App() {
-  return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
-  );
-}
+// export default class App extends Component{
+//   render() {
+//     return <Home/>
+//   }
+// }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+console.disableYellowBox = true;
+const navigator = createStackNavigator(
+  {
+    LoggedOut: {
+      screen: LoggedOut,
+      navigationOptions: {
+        headerTransparent: {
+          position: 'absolute',
+          backgroundColor: 'transparent',
+          zIndex: 100,
+          top: 0,
+          left: 0,
+          right: 0,
+        }
+      }
+    },
+    Login: {
+      screen: Login,
+      navigationOptions: {
+        headerTransparent: {
+          position: 'absolute',
+          backgroundColor: 'transparent',
+          zIndex: 100,
+          top: 0,
+          left: 0,
+          right: 0
+        },
+        headerTitleStyle: {
+          // fontFamily: "my-custom-font",
+          // fontWeight: "200",
+          fontSize: 25,
+        }
+      }
+    },
+    ForgotPassword: {
+      screen: ForgotPassword,
+      navigationOptions: {
+        headerTransparent: {
+          position: 'absolute',
+          backgroundColor: 'transparent',
+          zIndex: 100,
+          top: 0,
+          left: 0,
+          right: 0,
+        }
+      }
+    },
+    LoggedInTabNavigator: {screen: LoggedInTabNavigator},
   },
-});
+  {
+    initialRouteName: 'LoggedOut',
+    defaultNavigationOptions: {
+      title: 'LIFELINE',
+      headerTitleStyle: {
+        // fontFamily: "my-custom-font",
+        // fontWeight: "200",
+        fontSize: 25,
+      }
+    },
+  },
+);
+
+export default createAppContainer(navigator);
