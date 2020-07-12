@@ -1,98 +1,88 @@
-import React, { Component } from 'react'
-import MapView from 'react-native-maps';
-import { Marker } from 'react-native-maps';
-import { StyleSheet, Text, View, Dimensions } from 'react-native';
+import React, { Component } from 'react';
+import MapView, { Marker } from 'react-native-maps';
+import { StyleSheet, Text, View, Dimensions, Image } from 'react-native';
 import * as Permissions from 'expo-permissions';
 import * as Location from 'expo-location';
 
 export default class Home extends Component {
     state = {
-        // location: {},
-        longitude: 0,
-        latitude: 0,
-        errorMessage: '',
-        longitudeDelta: 0,
-        latitudeDelta: 0
-    }
-
+      mapRegion: { latitude: 37.78825, longitude: -122.4324, latitudeDelta: 0.0922, longitudeDelta: 0.0421 },
+      locationResult: null,
+      location: {coords: { latitude: 37.78825, longitude: -122.4324}},
+    };
+  
     componentDidMount() {
-        this._getLocation();
-    } 
-
-    _getLocation = async() => {
-        const {status} = await Permissions.askAsync(Permissions.LOCATION);
-        if(status !== 'granted'){
-            console.log('Permission Not Granted');
-            this.setState({
-                errorMessage: 'Permission Not Granted'
-            })
-        }
-        // const { location } = await Location.getCurrentPositionAsync({ enableHighAccuracy: true });
-        // this.setState({
-        //     // location,
-        //     logni: location.longitude,
-        //     lati: location.latitude
-        // })
-        let { coords } = await Location.getCurrentPositionAsync({});
-            this.setState({ region: {
-                longitude: coords.longitude,
-                latitude: coords.latitude,
-                longitudeDelta: 0.04,
-                latitudeDelta: 0.09
-            } 
-        });
+      this._getLocationAsync();
     }
-
+  
+    // _handleMapRegionChange = mapRegion => {
+    //   this.setState({ mapRegion });
+    // };
+  
+    _getLocationAsync = async () => {
+     let { status } = await Permissions.askAsync(Permissions.LOCATION);
+     if (status !== 'granted') {
+       this.setState({
+         locationResult: 'Permission to access location was denied',
+         location,
+       });
+     }
+  
+     let location = await Location.getCurrentPositionAsync({});
+     this.setState({ locationResult: JSON.stringify(location), location, });
+   };
+  
     render() {
-        // const long = JSON.stringify(this.state.location)[2][2];
-        // const lat = JSON.stringify(this.state.location)[2][4];
         return (
             <View>
-                <View style={styles.main}>
-                    <Text style={styles.text}>Are You Safe ???</Text>
-                    <Text style={styles.text}>{this.state.lati}</Text>
-                </View>    
-                <View style={styles.container}>
+                
+                <View>
                     <MapView
-                        region={this.state.region}
+                        // style={{ alignSelf: 'stretch', height: '100%' }}
                         style={styles.mapStyle}
+                        region={{ latitude: this.state.location.coords.latitude, longitude: this.state.location.coords.longitude, latitudeDelta: 0.0922, longitudeDelta: 0.0421 }}
+                        // onRegionChange={this._handleMapRegionChange}
+                        // customMapStyle={mapStyle}
                     >
-                        {/* <Marker
-                            coordinate={{latitude: this.state.lati,
-                            longitude: this.state.longi,
-                            latitudeDelta: 0.0922,
-                            longitudeDelta: 0.0421,}}
-                        /> */}
+                        <Marker
+                            coordinate={this.state.location.coords}
+                            title="Safe Driving"
+                            description="You are here"
+                        >
+                            <Image source={require('../img/marker.jpg')} style={{height: 50, width:50 }} />
+                        </Marker>
                     </MapView>
+                    <View style={styles.textWrapper}>
+                        <Text style={styles.text}>You Are Safe!!!</Text>
+                    </View>
                 </View>
+                
+            
+            {/* <Text style={{zIndex: 5044}}>
+                Location: {this.state.locationResult}
+            </Text> */}
+            
             </View>
-        )
+        );
     }
 }
 
+
 const styles = StyleSheet.create({
     text:{
-      fontSize: 40,
-      fontWeight: "900",
-      justifyContent: 'center',
-      alignItems: 'center',
-      textAlign: 'center',
-      marginTop: 10,
+        fontSize: 40,
+        fontWeight: 'bold',
+        // marginTop: 60,
     },
-    main:{
-      marginTop:20,
-    marginBottom: 50
-    },
-    container: {
-      margin:20,
-      backgroundColor: '#fff',
-      alignItems: 'center',
-      justifyContent: 'center',
-      borderColor: 'black',
-      borderWidth: 5
+    textWrapper:{
+        position: 'absolute',
+        width: '100%',
+        alignItems: 'center',
+        backgroundColor: 'rgba(0, 0, 0, 0.15)',
+        borderRadius: 50
     },
     mapStyle: {
-      width: 310,
-      height: 330,
+        width: '100%',
+        height: '100%',
     },
-  });
+});

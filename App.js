@@ -8,10 +8,14 @@ import ForgotPassword from './src/screens/ForgotPassword';
 // import Home from './src/containers/Home';
 import LoggedInTabNavigator from './src/navigators/LoggedInTabNavigator';
 import Home from './src/containers/Home';
+import Fog from './src/containers/Fog';
+import Help from './src/containers/Help';
+import Emergency from './src/containers/Emergency';
+import Metrics from './src/containers/Metrics';
 
 // export default class App extends Component{
 //   render() {
-//     return <Home/>
+//     return <Metrics/>
 //   }
 // }
 
