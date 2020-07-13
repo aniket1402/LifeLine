@@ -98,7 +98,7 @@ export default createAppContainer(navigator);
 
 // async componentDidMount() {
 //     try {
-//         const hospitalObject = await fetch('https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=29.969391,76.844994&radius=1500&type=hospital&key=AIzaSyD-XqZdzKqU90t9FLIjv_ZzU_FQkXmcl-A');
+//         const hospitalObject = await fetch('https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=29.969391,76.844994&radius=1500&type=hospital&key=API_KEY');
 //         const hospitals = await hospitalObject.json();
 //         console.log("sackndnfjsdnfkjndkjf")
 //         console.log(hospitals.results[0].geometry.location)
