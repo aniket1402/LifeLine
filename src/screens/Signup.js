@@ -1,35 +1,50 @@
-import React, { Component, useState } from 'react';
+import React, { useState } from 'react';
 import { StyleSheet, Text, View, ScrollView, KeyboardAvoidingView } from 'react-native';
+import AsyncStorage from '@react-native-community/async-storage';
 import colors from '../styles/colors';
 import InputField from '../components/form/InputField';
 import NextArrowButton from '../components/buttons/NextArrowButton';
 import Notification from '../components/Notification';
 import Loader from '../components/Loader';
-import { transparentHeaderStyle } from '../styles/navigation';
-import NavBarButton from '../components/buttons/NavBarButtons';
 
 const Signup = (props) => {
 
     const [formValid,setFormValid] = useState(true)
     const [validEmail,setValidEmail] = useState(false)
-    const [emailAddress,setEmailAddress] = useState('')
+    const [email,setEmailAddress] = useState('')
     const [password,setPassword] = useState('')
     const [validPassword,setValidPassword] = useState(false)
     const [loadingVisible,setLoadingVisible] = useState(false)
 
+    const sendCred = async (props) => {
+        console.log(email, password)
+        fetch("http://192.168.43.57:3000/signup",{
+          method:"POST",
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            "email": email,
+            "password": password
+          })
+        })
+        .then(res=>res.json())
+        .then(async (data)=>{
+          // console.log(data)
+          try {
+            await AsyncStorage.setItem('token', data.token)
+            props.navigation.replace("Login")
+          } catch (e) {
+            console.log("Some error ",e)
+          }
+        })
+      }
+
     handleNextButton = () => {
         setLoadingVisible(true)
-        // const {navigate} = props.navigation;
 
         setTimeout(() => {
-            if(emailAddress === 'aniket@gmail.com' && validPassword){
-                setFormValid(formValid => !formValid)
-                setLoadingVisible(loadingVisible => !loadingVisible)
-                props.navigation.navigate('LoggedInTabNavigator');
-            } else {
-                setFormValid(formValid => !formValid)
-                setLoadingVisible(loadingVisible => !loadingVisible)
-            }
+            sendCred(props)
         }, 2000);
     }
 
@@ -155,7 +170,6 @@ const styles = StyleSheet.create({
         position: 'absolute',
         bottom: 0,
         width: '100%',
-        // zIndex: 9,
     }
 });
 
