@@ -1,163 +1,151 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import { StyleSheet, Text, View, ScrollView, KeyboardAvoidingView } from 'react-native';
 import colors from '../styles/colors';
 import InputField from '../components/form/InputField';
 import NextArrowButton from '../components/buttons/NextArrowButton';
 import Notification from '../components/Notification';
 import Loader from '../components/Loader';
-import { transparentHeaderStyle } from '../styles/navigation';
 import NavBarButton from '../components/buttons/NavBarButtons';
+import AsyncStorage from '@react-native-community/async-storage';
 
-class Login extends Component {
-    static navigationOptions = ({ navigation }) => ({
-        headerRight: () => <NavBarButton handleButtonPress={() => navigation.navigate('ForgotPassword')} location='right' color={colors.white} text="Forgot Password?"/>,
-        // headerStyle: transparentHeaderStyle,
-        headerTintColor: colors.white
-    })
+const Login = (props) => {
+    const [formValid,setFormValid] = useState(true)
+    const [validEmail,setValidEmail] = useState(false)
+    const [email,setEmailAddress] = useState('')
+    const [password,setPassword] = useState('')
+    const [validPassword,setValidPassword] = useState(false)
+    const [loadingVisible,setLoadingVisible] = useState(false)
 
-    constructor(props) {
-        super(props);
-        this.state = {
-            formValid: true,
-            validEmail: false,
-            emailAddress: '',
-            password: '',
-            validPassword: false,
-            lodingVisible: false,
-        }
-        this.handleCloseNotification = this.handleCloseNotification.bind(this)
-        this.handleEmailChange = this.handleEmailChange.bind(this)
-        this.handlePasswordChange = this.handlePasswordChange.bind(this)
-        this.handleNextButton = this.handleNextButton.bind(this)
-        this.toggleNextButtonState = this.toggleNextButtonState.bind(this)
-    }
-    handleNextButton() {
-        // simulate slow server to show loading
-        this.setState({
-            lodingVisible: true
+    const sendCred = async (props) => {
+        console.log(email, password)
+        fetch("http://192.168.43.57:3000/signin",{
+          method:"POST",
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            "email": email,
+            "password": password
+          })
         })
-        const {navigate} = this.props.navigation;
+        .then(res=>res.json())
+        .then(async (data)=>{
+          // console.log(data)
+          try {
+            await AsyncStorage.setItem('token', data.token)
+            props.navigation.replace("LoggedInTabNavigator")
+          } catch (e) {
+                setLoadingVisible(false)
+                setFormValid(false)
+                console.log("Some error ",e)
+          }
+        })
+    }
+
+    handleNextButton = () => {
+        setLoadingVisible(true)
 
         setTimeout(() => {
-            // const {emailAddress, password} = this.state;
-            // if (this.props.logIn(emailAddress,password)){
-            //     this.setState({formValid: true, lodingVisible: false});
-            // } else {
-            //     this.setState({formValid: false, lodingVisible: false});
-            // }
-            if(this.state.emailAddress === 'aniket@gmail.com' && this.state.validPassword){
-                // alert('Success')
-                this.setState({formValid: true, lodingVisible: false}, () => {
-                    alert('success')
-                });
-                navigate('LoggedInTabNavigator');
-            } else {
-                this.setState({formValid: false, lodingVisible: false})
-            }
+            sendCred(props)
         }, 2000);
     }
 
-    handleCloseNotification() {
-        this.setState({
-            formValid: true
-        })
+    handleCloseNotification = () => {
+        setFormValid(true)
     }
 
-    handleEmailChange(email) {
+    handleEmailChange = (email) => {
         const emailCheckRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-        this.setState({
-            emailAddress: email,
-        })
-        if(!this.state.validEmail){
+        setEmailAddress(email)
+        if(!validEmail){
             if(emailCheckRegex.test(email)){
-                this.setState({validEmail: true})
+                setValidEmail(true)
             }
         } else {
             if(!emailCheckRegex.test(email)){
-                this.setState({validEmail: false})
+                setValidEmail(false)
             } 
         }
     }
 
-    handlePasswordChange(password){
-        this.setState({ password });
-        if(!this.state.validPassword){
+    handlePasswordChange = (password) => {
+        setPassword(password)
+        if(!validPassword){
             if(password.length > 4){
-                this.setState({validPassword: true})
+                setValidPassword(true)
             }
         } else if (password.length <= 4){
-            this.setState({validPassword: false})
+            setValidPassword(false)
         }
     }
 
-    toggleNextButtonState() {
-        const {validEmail, validPassword} = this.state;
+    toggleNextButtonState = () => {
         if(validEmail && validPassword){
             return false;
         }
         return true;
     }
 
-    render() {
-        const { formValid, lodingVisible, validEmail, validPassword } = this.state;
-        const showNotification = formValid ? false : true;
-        const background = formValid ? colors.green01 : colors.darkOrange;
-        // const notificationMarginTop = showNotification ? 10 : 0;
-        // console.log(this.props.loggedInStatus)
-        return (
-            <KeyboardAvoidingView style={[{backgroundColor: background},styles.wrapper]} behavior="">
-                <View style={styles.scrollViewWrapper}>
-                    <ScrollView style={styles.scrollView}>
-                        <Text style={styles.loginHeader}>Log In</Text>
-                        <InputField
-                            labelText="EMAIL ADDRESS"
-                            labelTextSize={14}
-                            labelColor={colors.white}
-                            textColor={colors.white}
-                            bottomBorderColor={colors.white}
-                            inputType="email"
-                            customStyle={{marginBottom:30}}
-                            onChangeText={this.handleEmailChange}
-                            showCheckmark={validEmail}
-                            autoFocus={true}
-                        />
-                        <InputField
-                            labelText="PASSWORD"
-                            labelTextSize={14}
-                            labelColor={colors.white}
-                            textColor={colors.white}
-                            bottomBorderColor={colors.white}
-                            inputType="password"
-                            customStyle={{marginBottom:30}}
-                            onChangeText={this.handlePasswordChange}
-                            showCheckmark={validPassword}
-                        />
-                    </ScrollView>
-                    <View style={styles.nextButton}>
-                        <NextArrowButton
-                            handleNextButton={this.handleNextButton}
-                            disabled={this.toggleNextButtonState()}
-                        />
-                    </View>
-                    {/* <View style={[styles.notificationWrapper, {marginTop: notificationMarginTop}]}> */}
-                    <View style={styles.notificationWrapper}>
-                        <Notification
-                            showNotification={showNotification}
-                            handleCloseNotification={this.handleCloseNotification}
-                            type="Error"
-                            firstLine="Those credentials don't look right."
-                            secondLine="Please try again."
-                        />
-                    </View>
+    const showNotification = formValid ? false : true;
+    const background = formValid ? colors.green01 : colors.darkOrange;
+
+    return (
+        <KeyboardAvoidingView style={[{backgroundColor: background},styles.wrapper]} behavior="">
+            <View style={styles.scrollViewWrapper}>
+                <ScrollView style={styles.scrollView}>
+                    <Text style={styles.loginHeader}>Log In</Text>
+                    <InputField
+                        labelText="EMAIL ADDRESS"
+                        labelTextSize={14}
+                        labelColor={colors.white}
+                        textColor={colors.white}
+                        bottomBorderColor={colors.white}
+                        inputType="email"
+                        customStyle={{marginBottom:30}}
+                        onChangeText={handleEmailChange}
+                        showCheckmark={validEmail}
+                        autoFocus={true}
+                    />
+                    <InputField
+                        labelText="PASSWORD"
+                        labelTextSize={14}
+                        labelColor={colors.white}
+                        textColor={colors.white}
+                        bottomBorderColor={colors.white}
+                        inputType="password"
+                        customStyle={{marginBottom:30}}
+                        onChangeText={handlePasswordChange}
+                        showCheckmark={validPassword}
+                    />
+                </ScrollView>
+                <View style={styles.nextButton}>
+                    <NextArrowButton
+                        handleNextButton={handleNextButton}
+                        disabled={toggleNextButtonState()}
+                    />
                 </View>
-                <Loader
-                    animationType="fade"
-                    modalVisible={lodingVisible}
-                />
-            </KeyboardAvoidingView>
-        )
-    }
+                <View style={styles.notificationWrapper}>
+                    <Notification
+                        showNotification={showNotification}
+                        handleCloseNotification={handleCloseNotification}
+                        type="Error"
+                        firstLine="Those credentials don't look right."
+                        secondLine="Please try again."
+                    />
+                </View>
+            </View>
+            <Loader
+                animationType="fade"
+                modalVisible={loadingVisible}
+            />
+        </KeyboardAvoidingView>
+    )
 }
+
+Login['navigationOptions'] = (props) => ({
+    headerRight: () => <NavBarButton handleButtonPress={() => props.navigation.navigate('ForgotPassword')} location='right' color={colors.white} text="Forgot Password?"/>,
+    headerTintColor: colors.white
+})
 
 const styles = StyleSheet.create({
     wrapper: {
@@ -185,7 +173,6 @@ const styles = StyleSheet.create({
         position: 'absolute',
         bottom: 0,
         width: '100%',
-        // zIndex: 9,
     }
 });
 

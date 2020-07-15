@@ -35,6 +35,8 @@ const Signup = (props) => {
             await AsyncStorage.setItem('token', data.token)
             props.navigation.replace("Login")
           } catch (e) {
+            setLoadingVisible(false)
+            setFormValid(false)
             console.log("Some error ",e)
           }
         })
