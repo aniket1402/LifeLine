@@ -51,7 +51,7 @@ export default class LoggedOut extends Component {
                         textColor={colors.white}
                         handleOnPress={this.onCreateAccountPress}
                     />
-                    <TouchableHighlight style={styles.moreOptionsButton} onPress={this.onMoreOptionsPress}>
+                    <TouchableHighlight style={styles.moreOptionsButton} underlayColor={'transparent'} onPress={this.onMoreOptionsPress}>
                         <Text style={styles.moreOptionsButtonText}>More Options</Text>
                     </TouchableHighlight>
                     <View style={styles.termAndConditions}>
@@ -114,6 +114,7 @@ const styles = StyleSheet.create({
     },
     moreOptionsButton: {
         marginTop: 10,
+        width: 125
     },
     moreOptionsButtonText: {
         color: colors.white,

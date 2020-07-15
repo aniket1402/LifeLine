@@ -9,7 +9,7 @@ export default class RoundedButton extends Component {
         const backgroundColor = background || 'transparent';
         const color = textColor || colors.black;
         return (
-            <TouchableHighlight style={[{backgroundColor},styles.wrapper]} onPress={handleOnPress}>
+            <TouchableHighlight style={[{backgroundColor},styles.wrapper]} underlayColor={colors.green02} onPress={handleOnPress}>
                 <View style={styles.buttonTextWrapper}>
                     {icon}
                     <Text style={[{color},styles.buttonText]}>{text}</Text>
