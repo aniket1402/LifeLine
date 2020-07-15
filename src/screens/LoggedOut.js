@@ -13,11 +13,19 @@ export default class LoggedOut extends Component {
         headerStyle: transparentHeaderStyle,
         headerTintColor: colors.white
     })
+
+    constructor(props){
+        super(props)
+        this.onCreateAccountPress = this.onCreateAccountPress.bind(this)
+    }
+    
     onFacebookPress() {
         alert('Facebook button')
     }
-    onCreateAccountPress() {
-        alert('Create button')
+    onCreateAccountPress({navigation}) {
+        const {navigate} = this.props.navigation;
+        // alert('Create button')
+        navigate('Signup')
     }
     onMoreOptionsPress() {
         alert('More options')

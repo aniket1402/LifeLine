@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import MapView, { Marker, Polygon } from 'react-native-maps';
 import { StyleSheet, Text, View } from 'react-native';
+import { API_KEY } from '../../API';
 
 const Emergency = () => {
         // global. x;
@@ -14,7 +15,7 @@ const Emergency = () => {
         const [data4, setData4] = useState([]);
         const getResult = async () => {
           try {
-            const hospitalObject = await fetch(`https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${currLat},${currLng}&radius=500&type=hospital&accuracy=high&sensor=true&key=API_KEY`);
+            const hospitalObject = await fetch(`https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${currLat},${currLng}&radius=500&type=hospital&accuracy=high&sensor=true&key=${API_KEY}`);
             const hospitals = await hospitalObject.json();
             // console.log("\n\n\nHello 1")
             // console.log(hospitals.results[7].types)

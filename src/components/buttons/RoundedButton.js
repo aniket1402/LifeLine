@@ -35,7 +35,7 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderColor: colors.white,
         marginBottom: 15,
-        alignItems: 'center'
+        alignItems: 'center',
     },
     buttonTextWrapper: {
         flexDirection: 'row',

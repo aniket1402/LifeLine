@@ -12,25 +12,13 @@ import Help from './src/screens/Help';
 import Emergency from './src/screens/Emergency';
 import Metrics from './src/screens/Metrics';
 import PhoneCall from './src/screens/PhoneCall';
+import Signup from './src/screens/Signup';
 
 // export default class App extends Component{
 //   render() {
-//     return <Emergency/>
+//     return <Signup/>
 //   }
 // }
-
-// const navigator = createStackNavigator(
-//     {
-//         Emergenc: Emergency
-//     },
-//     {
-//         initialRouteName: 'Emergenc',
-//         defaultNavigationOptions: {
-//             title: 'Ee'
-//         }
-//     }
-// );
-// export default createAppContainer(navigator)
 
 console.disableYellowBox = true;
 const navigator = createStackNavigator(
@@ -60,8 +48,22 @@ const navigator = createStackNavigator(
           right: 0
         },
         headerTitleStyle: {
-          // fontFamily: "my-custom-font",
-          // fontWeight: "200",
+          fontSize: 25,
+        }
+      }
+    },
+    Signup: {
+      screen: Signup,
+      navigationOptions: {
+        headerTransparent: {
+          position: 'absolute',
+          backgroundColor: 'transparent',
+          zIndex: 100,
+          top: 0,
+          left: 0,
+          right: 0
+        },
+        headerTitleStyle: {
           fontSize: 25,
         }
       }
@@ -86,8 +88,6 @@ const navigator = createStackNavigator(
     defaultNavigationOptions: {
       title: 'LIFELINE',
       headerTitleStyle: {
-        // fontFamily: "my-custom-font",
-        // fontWeight: "200",
         fontSize: 25,
       }
     },
